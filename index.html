@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>프로젝트 멤버 협업 보드 (Persistent Data)</title>
+    <title>프로젝트 멤버 협업 보드 (CSP Compliant)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
@@ -24,63 +24,54 @@
 <body class="bg-slate-50 text-slate-900 font-sans overflow-hidden">
 
     <div id="app" class="flex flex-col h-screen">
-        <!-- 토스트 알림 -->
         <div id="toast-container" class="fixed bottom-10 left-1/2 -translate-x-1/2 z-[300] flex flex-col items-center space-y-2 pointer-events-none"></div>
 
-        <!-- 초기 로딩/로그인 오버레이 -->
+        <!-- Auth Overlay -->
         <div id="auth-overlay" class="fixed inset-0 bg-white z-[100] flex flex-col items-center justify-center transition-opacity duration-500">
             <div id="loading-spinner" class="flex flex-col items-center">
                 <div class="animate-spin mb-4 w-12 h-12 border-4 border-indigo-500 border-t-transparent rounded-full"></div>
-                <p id="auth-loading-text" class="text-slate-600 font-medium text-lg italic uppercase tracking-widest">Verifying Connection...</p>
+                <p class="text-slate-600 font-medium text-lg italic uppercase tracking-widest text-center px-4">Verifying Secure Connection...</p>
             </div>
 
-            <!-- 통합 로그인 폼 -->
             <div id="login-container" class="hidden w-full max-w-sm p-8 bg-white rounded-[2.5rem] shadow-2xl border border-slate-100">
                 <div class="text-center mb-8">
                     <div class="inline-block p-4 bg-indigo-600 text-white rounded-2xl mb-4 shadow-lg">
                         <i data-lucide="lock" class="w-6 h-6"></i>
                     </div>
-                    <h2 class="text-2xl font-black text-slate-800 italic uppercase">Collaborator Login</h2>
-                    <p class="text-slate-400 text-sm mt-1 font-medium italic">원하시는 방식으로 인증을 진행하세요</p>
+                    <h2 class="text-2xl font-black text-slate-800 italic uppercase">Secure Login</h2>
+                    <p class="text-slate-400 text-sm mt-1 font-medium italic">협업 보드에 안전하게 접속하세요</p>
                 </div>
-
                 <div class="space-y-3">
                     <button id="btn-google-login" class="w-full flex items-center justify-center space-x-3 py-3.5 border border-slate-200 rounded-2xl hover:bg-slate-50 transition-all font-bold text-sm active:scale-[0.98]">
                         <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.66l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
-                        <span>Google 계정으로 로그인</span>
+                        <span>Google 로그인</span>
                     </button>
                     <div class="flex items-center my-4 px-2">
                         <div class="flex-1 h-px bg-slate-100"></div>
-                        <span class="px-3 text-[10px] text-slate-300 font-bold uppercase tracking-widest">OR</span>
+                        <span class="px-3 text-[10px] text-slate-300 font-bold tracking-widest">OR</span>
                         <div class="flex-1 h-px bg-slate-100"></div>
                     </div>
                     <div class="space-y-2">
-                        <input id="login-email" type="email" placeholder="Email Address" class="w-full p-3.5 text-sm bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-100 font-medium">
-                        <input id="login-password" type="password" placeholder="Password" class="w-full p-3.5 text-sm bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-100 font-medium">
+                        <input id="login-email" type="email" placeholder="이메일" class="w-full p-3.5 text-sm bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-100 font-medium">
+                        <input id="login-password" type="password" placeholder="비밀번호" class="w-full p-3.5 text-sm bg-slate-50 border border-slate-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-100 font-medium">
                         <div class="grid grid-cols-2 gap-2">
                             <button id="btn-email-signin" class="py-3 bg-indigo-600 text-white rounded-2xl text-xs font-black hover:bg-indigo-700 transition-all active:scale-[0.98]">로그인</button>
                             <button id="btn-email-signup" class="py-3 bg-slate-100 text-slate-600 rounded-2xl text-xs font-black hover:bg-slate-200 transition-all active:scale-[0.98]">회원가입</button>
                         </div>
                     </div>
                     <div class="pt-4 text-center">
-                        <button id="btn-anon-login" class="text-indigo-500 text-xs font-bold hover:underline transition-all active:scale-95 italic">
-                            계정 없이 익명으로 접속하기
-                        </button>
+                        <button id="btn-anon-login" class="text-indigo-500 text-xs font-bold hover:underline transition-all active:scale-95 italic">익명 계정으로 시작</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- 헤더 -->
         <header class="bg-white border-b px-6 py-3 flex justify-between items-center shadow-sm z-50">
             <div class="flex items-center space-x-6">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-indigo-600 p-2 rounded-lg text-white shadow-md">
-                        <i data-lucide="network" class="w-5 h-5"></i>
-                    </div>
-                    <h1 class="text-lg font-black tracking-tight hidden md:block italic">PROJECT BOARD</h1>
+                    <div class="bg-indigo-600 p-2 rounded-lg text-white shadow-md"><i data-lucide="network" class="w-5 h-5"></i></div>
+                    <h1 class="text-lg font-black tracking-tight hidden md:block italic uppercase">Collab Board</h1>
                 </div>
-                
                 <nav class="flex bg-slate-100 p-1 rounded-xl">
                     <button id="tab-diagram" class="px-5 py-1.5 rounded-lg text-xs font-black transition-all bg-white shadow-sm text-indigo-600">네트워크 뷰</button>
                     <button id="tab-summary" class="px-5 py-1.5 rounded-lg text-xs font-black transition-all text-slate-500 hover:text-indigo-600">요약 리스트</button>
@@ -100,59 +91,47 @@
                     </div>
                     <i data-lucide="settings" class="w-3 h-3 text-indigo-400 group-hover:rotate-90 transition-transform"></i>
                 </div>
-                <button id="btn-signout" class="p-2 text-slate-300 hover:text-rose-500 transition-colors" title="로그아웃">
-                    <i data-lucide="log-out" class="w-5 h-5"></i>
-                </button>
+                <button id="btn-signout" class="p-2 text-slate-300 hover:text-rose-500 transition-colors"><i data-lucide="log-out" class="w-5 h-5"></i></button>
             </div>
         </header>
 
-        <!-- 공지사항 바 -->
+        <!-- Notice -->
         <div class="bg-indigo-700 text-white px-6 py-2 flex items-center justify-between z-40 shadow-md">
             <div class="flex items-center flex-1 overflow-hidden">
                 <span class="bg-white text-indigo-700 text-[9px] font-black px-2 py-0.5 rounded mr-3 whitespace-nowrap tracking-widest italic shadow-sm">GLOBAL NOTICE</span>
-                <p id="notice-text" class="text-sm font-medium truncate italic opacity-90">새로운 공지사항을 등록해 주세요.</p>
+                <p id="notice-text" class="text-sm font-medium truncate italic opacity-90">새로운 공지사항을 확인하세요.</p>
             </div>
-            <button id="btn-edit-notice" class="ml-4 p-1 hover:bg-indigo-600 rounded transition-colors" title="공지 수정">
-                <i data-lucide="edit-3" class="w-4 h-4"></i>
-            </button>
+            <button id="btn-edit-notice" class="ml-4 p-1 hover:bg-indigo-600 rounded transition-colors"><i data-lucide="edit-3" class="w-4 h-4"></i></button>
         </div>
 
         <div class="flex flex-1 relative overflow-hidden">
-            <!-- 1. 다이어그램 뷰 -->
+            <!-- 1. Diagram View -->
             <main id="view-diagram" class="flex-1 relative bg-slate-50 overflow-hidden">
                 <svg id="network-svg" class="w-full h-full absolute inset-0 z-0"></svg>
                 <div id="members-layer" class="absolute inset-0 z-10"></div>
-                
                 <div class="absolute bottom-6 right-6 flex flex-col space-y-2 pointer-events-none">
                     <div class="bg-white/90 backdrop-blur p-5 rounded-3xl border border-slate-200 shadow-2xl max-w-xs">
-                        <h3 class="text-xs font-black text-slate-800 mb-2 uppercase tracking-widest flex items-center italic">
-                            <i data-lucide="info" class="w-3 h-3 mr-2 text-indigo-500"></i> Collaboration Guide
-                        </h3>
+                        <h3 class="text-xs font-black text-slate-800 mb-2 uppercase tracking-widest flex items-center italic"><i data-lucide="info" class="w-3 h-3 mr-2 text-indigo-500"></i> Collaboration Guide</h3>
                         <ul class="text-[11px] space-y-1.5 text-slate-600 font-medium italic leading-relaxed">
-                            <li>• 본인의 캐릭터에는 파란색 강조 테두리가 표시됩니다.</li>
-                            <li>• 다른 멤버를 클릭하여 요청을 보내거나 진행 상태를 확인하세요.</li>
-                            <li>• 화살표 위의 숫자는 해결되지 않은 업무 수입니다.</li>
+                            <li>• 본인의 캐릭터에는 파란색 테두리가 표시됩니다.</li>
+                            <li>• 멤버를 클릭하여 요청을 전송하거나 확인하세요.</li>
+                            <li>• 로그아웃 후에도 업무 데이터는 유지됩니다.</li>
                         </ul>
                     </div>
                 </div>
             </main>
 
-            <!-- 2. 요약 리스트 뷰 -->
+            <!-- 2. Summary View -->
             <main id="view-summary" class="flex-1 bg-white overflow-y-auto view-hidden p-10">
                 <div class="max-w-7xl mx-auto space-y-10">
                     <div class="flex justify-between items-end border-b border-slate-100 pb-6">
-                        <div>
-                            <h2 class="text-3xl font-black text-slate-800 italic uppercase tracking-tighter">Workflow Summary</h2>
-                            <p class="text-slate-400 text-sm font-medium italic mt-1">멤버별 실시간 업무 수신 내역 및 처리 현황 요약</p>
-                        </div>
+                        <h2 class="text-3xl font-black text-slate-800 italic uppercase tracking-tighter">Workflow Summary</h2>
                     </div>
-                    <div id="summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32">
-                        <!-- 동적으로 사용자별 카드 생성 -->
-                    </div>
+                    <div id="summary-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pb-32"></div>
                 </div>
             </main>
 
-            <!-- 사이드 상세 패널 -->
+            <!-- Side Panel -->
             <aside id="side-panel" class="w-[26rem] bg-white border-l shadow-2xl z-50 transform translate-x-full transition-transform duration-500 flex flex-col">
                 <div class="p-6 border-b flex justify-between items-center bg-slate-50/50 backdrop-blur">
                     <div class="flex items-center space-x-4">
@@ -160,112 +139,78 @@
                             <img id="panel-user-img" src="" class="w-12 h-12 rounded-full border-2 border-white shadow-xl">
                             <span id="panel-me-tag" class="hidden absolute -top-1 -right-1 bg-indigo-600 text-white text-[8px] font-black px-2 py-1 rounded-full border border-white shadow-sm">ME</span>
                         </div>
-                        <div>
-                            <h2 id="panel-title" class="font-black text-slate-800 leading-tight text-xl italic uppercase">Member Detail</h2>
-                            <p id="panel-role" class="text-[10px] text-slate-400 font-bold uppercase tracking-widest italic">Team Collaborator</p>
-                        </div>
+                        <h2 id="panel-title" class="font-black text-slate-800 leading-tight text-xl italic uppercase">Member Detail</h2>
                     </div>
-                    <button id="close-panel" class="p-2.5 hover:bg-slate-200 rounded-full transition-colors active:scale-90">
-                        <i data-lucide="x" class="w-6 h-6 text-slate-400"></i>
-                    </button>
+                    <button id="close-panel" class="p-2.5 hover:bg-slate-200 rounded-full transition-all active:scale-90"><i data-lucide="x" class="w-6 h-6 text-slate-400"></i></button>
                 </div>
                 
                 <div id="panel-content" class="flex-1 overflow-y-auto p-6 space-y-10">
-                    <!-- 요청하기 -->
+                    <!-- Request Section -->
                     <section id="section-request" class="space-y-4">
                         <div class="flex justify-between items-center px-1">
-                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center italic">
-                                <i data-lucide="plus-circle" class="w-4 h-4 mr-2 text-indigo-500"></i> New Collaboration Request
-                            </h3>
-                            <button id="btn-ai-refine" class="text-[10px] bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95 italic">✨ AI REFINE</button>
+                            <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center italic"><i data-lucide="plus-circle" class="w-4 h-4 mr-2 text-indigo-500"></i> Send New Request</h3>
+                            <button id="btn-ai-refine" class="text-[10px] bg-indigo-600 text-white px-3 py-1.5 rounded-lg font-black hover:bg-indigo-700 transition-all shadow-md active:scale-95">✨ AI REFINE</button>
                         </div>
                         <div class="bg-indigo-50/40 p-5 rounded-[2rem] border border-indigo-100 space-y-4 shadow-sm">
-                            <textarea id="req-text" placeholder="요청하실 내용을 구체적으로 입력해 주세요..." class="w-full h-32 p-4 text-sm rounded-2xl border border-indigo-100 focus:ring-4 focus:ring-indigo-50 focus:border-indigo-300 focus:outline-none bg-white transition-all font-medium"></textarea>
+                            <textarea id="req-text" placeholder="요청 사항을 구체적으로 적어주세요..." class="w-full h-32 p-4 text-sm rounded-2xl border border-indigo-100 focus:ring-4 focus:ring-indigo-50 focus:outline-none bg-white font-medium"></textarea>
                             <div class="flex items-center justify-between px-2">
                                 <label class="flex items-center space-x-2 cursor-pointer text-xs text-indigo-600 font-black hover:underline transition-all">
-                                    <div class="p-1.5 bg-white rounded-lg shadow-sm border border-indigo-50">
-                                        <i data-lucide="image" class="w-4 h-4"></i>
-                                    </div>
-                                    <span>이미지 자료 첨부</span>
+                                    <div class="p-1.5 bg-white rounded-lg shadow-sm border border-indigo-50"><i data-lucide="image" class="w-4 h-4"></i></div>
+                                    <span>이미지 첨부</span>
                                     <input type="file" id="req-file" accept="image/*" class="hidden">
                                 </label>
-                                <span id="req-file-status" class="text-[10px] text-slate-400 font-bold italic">No Attachment</span>
+                                <span id="req-file-status" class="text-[10px] text-slate-400 font-bold italic uppercase tracking-tighter">No Attachment</span>
                             </div>
-                            <button id="btn-submit-request" class="w-full bg-indigo-600 text-white py-4 rounded-2xl text-sm font-black hover:bg-indigo-700 shadow-xl shadow-indigo-100 active:scale-[0.98] transition-all uppercase tracking-widest">Send Request</button>
+                            <button id="btn-submit-request" class="w-full bg-indigo-600 text-white py-4 rounded-2xl text-sm font-black hover:bg-indigo-700 shadow-xl shadow-indigo-100 active:scale-[0.98] uppercase tracking-widest">Send Request</button>
                         </div>
                     </section>
 
-                    <!-- 스트림 -->
+                    <!-- History Stream -->
                     <section id="section-history" class="space-y-5">
-                        <h3 id="history-title" class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center italic px-1">
-                            <i data-lucide="list-todo" class="w-4 h-4 mr-2 text-indigo-500"></i> Request Stream
-                        </h3>
-                        <div id="request-list" class="space-y-5 pb-20">
-                            <!-- 실시간 카드 삽입 -->
-                        </div>
+                        <h3 id="history-title" class="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center italic px-1"><i data-lucide="list-todo" class="w-4 h-4 mr-2 text-indigo-500"></i> Request Stream</h3>
+                        <div id="request-list" class="space-y-5 pb-20"></div>
                     </section>
                 </div>
             </aside>
         </div>
     </div>
 
-    <!-- 모달: 프로필 설정 -->
+    <!-- Profile Modal -->
     <div id="profile-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md z-[200] flex items-center justify-center p-6 hidden">
         <div class="bg-white rounded-[3rem] shadow-2xl max-w-md w-full p-12 transform scale-100 transition-transform">
             <div class="text-center mb-10">
-                <div class="relative inline-block mb-6">
-                    <img id="profile-preview-avatar" src="" class="w-28 h-28 rounded-full border-4 border-indigo-100 shadow-2xl bg-white">
-                    <div class="absolute bottom-1 right-1 bg-indigo-600 text-white p-2.5 rounded-full shadow-lg border-4 border-white">
-                        <i data-lucide="camera" class="w-4 h-4"></i>
-                    </div>
-                </div>
-                <h2 class="text-3xl font-black text-slate-800 italic uppercase tracking-tighter">Member Setup</h2>
-                <p class="text-slate-400 text-sm mt-2 font-medium italic">다른 팀원들에게 보여질 정보를 입력하세요</p>
+                <img id="profile-preview-avatar" src="" class="w-28 h-28 rounded-full border-4 border-indigo-100 shadow-2xl bg-white mx-auto mb-6">
+                <h2 class="text-3xl font-black text-slate-800 italic uppercase tracking-tighter">Profile Setup</h2>
             </div>
             <div class="space-y-5">
-                <div class="space-y-1.5 px-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nickname (Display)</label>
-                    <input id="setup-nickname" type="text" placeholder="본인의 닉네임을 입력하세요" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-black text-slate-700 transition-all">
-                </div>
-                <div class="space-y-1.5 px-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Phone (Private)</label>
-                    <input id="setup-phone" type="tel" placeholder="010-0000-0000" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-medium">
-                </div>
-                <div class="space-y-1.5 px-1">
-                    <label class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email (Private)</label>
-                    <input id="setup-email" type="email" placeholder="example@team.com" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-medium">
-                </div>
-                <button id="btn-save-profile" class="w-full py-5 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-100 hover:bg-indigo-700 transition-all mt-6 active:scale-95 uppercase tracking-widest">Join Collaboration</button>
+                <input id="setup-nickname" type="text" placeholder="닉네임 (화면 노출용)" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-black text-slate-700">
+                <input id="setup-phone" type="tel" placeholder="전화번호" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-medium">
+                <input id="setup-email" type="email" placeholder="이메일" class="w-full p-4 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-4 focus:ring-indigo-50 focus:outline-none font-medium">
+                <button id="btn-save-profile" class="w-full py-5 bg-indigo-600 text-white rounded-3xl font-black shadow-2xl shadow-indigo-100 hover:bg-indigo-700 transition-all mt-6 active:scale-95 uppercase tracking-widest">Complete Profile</button>
             </div>
         </div>
     </div>
 
-    <!-- 모달: 공지사항 수정 -->
+    <!-- Notice Edit Modal -->
     <div id="notice-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-[200] flex items-center justify-center p-6 hidden">
         <div class="bg-white rounded-[2.5rem] shadow-2xl max-w-lg w-full p-10">
-            <h3 class="text-2xl font-black mb-6 italic text-indigo-600 flex items-center tracking-tighter uppercase">
-                <i data-lucide="megaphone" class="w-6 h-6 mr-3"></i> Project Notice
-            </h3>
-            <textarea id="input-notice" class="w-full h-40 p-5 bg-slate-50 border border-slate-200 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-50 mb-6 font-medium text-slate-700" placeholder="전체 공지 내용을 입력하세요..."></textarea>
+            <h3 class="text-2xl font-black mb-6 italic text-indigo-600 uppercase tracking-tighter">Edit Project Notice</h3>
+            <textarea id="input-notice" class="w-full h-40 p-5 bg-slate-50 border border-slate-200 rounded-3xl focus:outline-none focus:ring-4 focus:ring-indigo-50 mb-6 font-medium text-slate-700"></textarea>
             <div class="flex space-x-3">
-                <button onclick="document.getElementById('notice-modal').classList.add('hidden')" class="flex-1 py-4 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200 transition-all">Cancel</button>
-                <button id="btn-save-notice" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-indigo-700 transition-all active:scale-95">Post Notice</button>
+                <button onclick="document.getElementById('notice-modal').classList.add('hidden')" class="flex-1 py-4 bg-slate-100 text-slate-500 rounded-2xl font-black uppercase tracking-widest hover:bg-slate-200">Cancel</button>
+                <button id="btn-save-notice" class="flex-1 py-4 bg-indigo-600 text-white rounded-2xl font-black uppercase tracking-widest shadow-lg hover:bg-indigo-700 active:scale-95">Update</button>
             </div>
         </div>
     </div>
 
-    <!-- AI 리포트 모달 -->
+    <!-- AI Briefing Modal -->
     <div id="ai-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-[3rem] shadow-2xl max-w-2xl w-full p-10 flex flex-col max-h-[85vh]">
             <div class="flex justify-between items-center mb-8 border-b border-slate-100 pb-6">
-                <h2 class="text-2xl font-black flex items-center text-slate-800 italic uppercase tracking-tighter">
-                    <i data-lucide="sparkles" class="w-7 h-7 mr-3 text-indigo-500"></i> AI Collaboration Briefing
-                </h2>
-                <button onclick="document.getElementById('ai-modal').classList.add('hidden')" class="p-2 hover:bg-slate-100 rounded-full transition-all">
-                    <i data-lucide="x" class="w-7 h-7 text-slate-300"></i>
-                </button>
+                <h2 class="text-2xl font-black flex items-center text-slate-800 italic uppercase tracking-tighter"><i data-lucide="sparkles" class="w-7 h-7 mr-3 text-indigo-500"></i> AI Analysis Report</h2>
+                <button onclick="document.getElementById('ai-modal').classList.add('hidden')" class="p-2 hover:bg-slate-100 rounded-full transition-all"><i data-lucide="x" class="w-7 h-7 text-slate-300"></i></button>
             </div>
-            <div id="ai-report-content" class="flex-1 overflow-y-auto text-slate-600 leading-relaxed text-sm whitespace-pre-wrap pr-4 font-medium italic">분석 진행 중...</div>
+            <div id="ai-report-content" class="flex-1 overflow-y-auto text-slate-600 leading-relaxed text-sm whitespace-pre-wrap pr-4 font-medium italic">분석 리포트를 생성하는 중입니다...</div>
             <div class="mt-8 flex justify-end">
                 <button onclick="document.getElementById('ai-modal').classList.add('hidden')" class="px-10 py-4 bg-slate-900 text-white font-black rounded-2xl shadow-xl active:scale-95 transition-all uppercase tracking-widest text-xs">Close</button>
             </div>
@@ -281,7 +226,6 @@
         } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getDatabase, ref, push, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
 
-        // 1. Firebase Configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBz14wOq1Qf4--d3VE_5gD1-_YXELTBRFw",
             authDomain: "aiboot-90412.firebaseapp.com",
@@ -298,7 +242,6 @@
         const googleProvider = new GoogleAuthProvider();
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'project-collab-v3';
 
-        // AI 헬퍼
         const geminiApiKey = "";
         const callGemini = async (prompt, sys) => {
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
@@ -309,7 +252,6 @@
             return data.candidates?.[0]?.content?.parts?.[0]?.text;
         };
 
-        // State
         let myProfile = null;
         let allProfiles = {};
         let allRequests = [];
@@ -357,16 +299,12 @@
                 } else {
                     showProfileModal(user);
                 }
-            } catch (err) {
-                console.error("Profile Error:", err);
-                showToast("데이터 연결 실패", "error");
-            }
+            } catch (err) { console.error(err); }
         }
 
         function showProfileModal(user) {
             const avatar = `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.uid}`;
             document.getElementById('profile-preview-avatar').src = avatar;
-            document.getElementById('setup-email').value = user.email || "";
             document.getElementById('profile-modal').classList.remove('hidden');
             document.getElementById('btn-save-profile').onclick = async () => {
                 const nick = document.getElementById('setup-nickname').value.trim();
@@ -376,21 +314,18 @@
                 document.getElementById('header-nickname').textContent = nick;
                 document.getElementById('header-user-avatar').src = avatar;
                 document.getElementById('profile-modal').classList.add('hidden');
-                showToast("프로필 설정이 완료되었습니다.");
                 updateUI();
             };
         }
 
         function bindAuthEvents() {
-            document.getElementById('btn-google-login').onclick = () => signInWithPopup(auth, googleProvider).catch(e => showToast("로그인 실패", "error"));
+            document.getElementById('btn-google-login').onclick = () => signInWithPopup(auth, googleProvider).catch(e => showToast("구글 로그인 실패", "error"));
             document.getElementById('btn-email-signin').onclick = () => {
                 const e = document.getElementById('login-email').value, p = document.getElementById('login-password').value;
-                if(!e || !p) return showToast("입력란을 확인하세요", "error");
-                signInWithEmailAndPassword(auth, e, p).catch(err => showToast("로그인 실패", "error"));
+                signInWithEmailAndPassword(auth, e, p).catch(err => showToast("아이디/비밀번호 확인", "error"));
             };
             document.getElementById('btn-email-signup').onclick = () => {
                 const e = document.getElementById('login-email').value, p = document.getElementById('login-password').value;
-                if(!e || !p) return showToast("입력란을 확인하세요", "error");
                 createUserWithEmailAndPassword(auth, e, p).catch(err => showToast("회원가입 실패", "error"));
             };
             document.getElementById('btn-anon-login').onclick = () => signInAnonymously(auth);
@@ -399,7 +334,6 @@
         }
 
         function startRealtimeSync() {
-            // [영속성 핵심] 모든 요청 데이터와 프로필은 이곳에서 전역적으로 구독합니다.
             onValue(ref(rtdb, `artifacts/${appId}/public/data/profiles`), (snap) => {
                 allProfiles = snap.val() || {};
                 updateUI();
@@ -411,7 +345,7 @@
             });
             onValue(ref(rtdb, `artifacts/${appId}/public/data/notices`), (snap) => {
                 const notice = snap.val();
-                document.getElementById('notice-text').textContent = notice?.content || "등록된 공지사항이 없습니다.";
+                document.getElementById('notice-text').textContent = notice?.content || "No Active Notices";
             });
         }
 
@@ -424,18 +358,17 @@
             };
             document.getElementById('btn-save-notice').onclick = async () => {
                 const content = document.getElementById('input-notice').value.trim();
-                await set(ref(rtdb, `artifacts/${appId}/public/data/notices`), { content, updatedAt: Date.now(), author: auth.currentUser.uid });
+                await set(ref(rtdb, `artifacts/${appId}/public/data/notices`), { content, updatedAt: Date.now() });
                 document.getElementById('notice-modal').classList.add('hidden');
-                showToast("공지가 업데이트되었습니다.");
             };
             document.getElementById('btn-ai-briefing').onclick = async () => {
                 const modal = document.getElementById('ai-modal'), content = document.getElementById('ai-report-content');
-                modal.classList.remove('hidden'); content.innerText = "프로젝트 데이터를 수집하여 AI 분석 진행 중...";
+                modal.classList.remove('hidden'); content.innerText = "Analyzing collaboration flow...";
                 try {
-                    const dataSum = allRequests.map(r => ({ from: allProfiles[r.fromId]?.nickname, to: allProfiles[r.toId]?.nickname, status: r.status }));
-                    const report = await callGemini(`현황: ${JSON.stringify(dataSum)}. 요약 보고서 작성.`, "수석 분석가");
+                    const dataSum = allRequests.map(r => ({ to: allProfiles[r.toId]?.nickname, status: r.status }));
+                    const report = await callGemini(`데이터: ${JSON.stringify(dataSum)}. 업무 보고서 작성.`, "분석 전문가");
                     content.innerText = report.trim();
-                } catch (e) { content.innerText = "분석 중 오류 발생"; }
+                } catch (e) { content.innerText = "Error in analysis."; }
             };
             document.getElementById('close-panel').onclick = () => {
                 document.getElementById('side-panel').classList.add('translate-x-full');
@@ -444,25 +377,25 @@
             document.getElementById('req-file').onchange = (e) => {
                 const f = e.target.files[0]; if(!f) return;
                 const r = new FileReader();
-                r.onload = (ev) => { attachedImageBase64 = ev.target.result; document.getElementById('req-file-status').textContent = "첨부 완료 ✅"; };
+                r.onload = (ev) => { attachedImageBase64 = ev.target.result; document.getElementById('req-file-status').textContent = "ATTACHED ✅"; };
                 r.readAsDataURL(f);
             };
             document.getElementById('btn-submit-request').onclick = async () => {
                 const txt = document.getElementById('req-text').value.trim();
-                if(!txt || !selectedMemberId) return showToast("내용과 대상을 확인하세요", "error");
+                if(!txt || !selectedMemberId) return showToast("Check content/target", "error");
                 await push(ref(rtdb, `artifacts/${appId}/public/data/requests`), {
                     fromId: auth.currentUser.uid, toId: selectedMemberId, content: txt, reqImage: attachedImageBase64 || null, status: 'pending', createdAt: Date.now()
                 });
                 document.getElementById('req-text').value = '';
                 document.getElementById('req-file-status').textContent = 'No Attachment';
-                attachedImageBase64 = null; showToast("요청 전송 성공");
+                attachedImageBase64 = null; showToast("Request Sent!");
             };
             document.getElementById('btn-ai-refine').onclick = async () => {
                 const txt = document.getElementById('req-text').value.trim();
                 if(!txt) return;
-                const btn = document.getElementById('btn-ai-refine'); btn.innerText = "✨ ANALYSIS...";
+                const btn = document.getElementById('btn-ai-refine'); btn.innerText = "REFING...";
                 try {
-                    const refined = await callGemini(`이 요청을 정중하게 다듬어줘: "${txt}"`, "비즈니스 비서");
+                    const refined = await callGemini(`Politely refine: "${txt}"`, "Business Assistant");
                     document.getElementById('req-text').value = refined.trim();
                 } finally { btn.innerText = "✨ AI REFINE"; }
             };
@@ -495,7 +428,6 @@
             container.innerHTML = '';
             const rect = document.getElementById('diagram-container').getBoundingClientRect();
             if (rect.width === 0) return;
-
             const cx = rect.width / 2, cy = rect.height / 2, radius = Math.min(rect.width, rect.height) * 0.32;
             const profiles = Object.values(allProfiles);
             const count = Math.max(profiles.length, 1);
@@ -504,7 +436,6 @@
                 const angle = (i / count) * Math.PI * 2;
                 p.x = cx + radius * Math.cos(angle); p.y = cy + radius * Math.sin(angle);
                 const isMe = p.id === auth.currentUser?.uid, isSelected = selectedMemberId === p.id;
-                // [영속 수치 계산]
                 const pCount = allRequests.filter(r => r.toId === p.id && r.status !== 'completed').length;
                 
                 const node = document.createElement('div');
@@ -513,12 +444,12 @@
                 node.innerHTML = `
                     <div class="relative group">
                         <img src="${p.avatar}" class="w-16 h-16 md:w-20 md:h-20 rounded-full border-4 ${isMe ? 'border-indigo-600' : 'border-white'} shadow-2xl bg-white">
-                        ${isMe ? `<div class="me-badge absolute -top-2 -right-2 bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full border-2 border-white shadow-md">나(ME)</div>` : ''}
+                        ${isMe ? `<div class="me-badge absolute -top-2 -right-2 bg-indigo-600 text-white text-[9px] font-black px-2 py-0.5 rounded-full border-2 border-white shadow-sm flex items-center">나(ME)</div>` : ''}
                         ${pCount > 0 ? `<span class="absolute -bottom-1 -right-1 bg-rose-500 text-white text-[10px] font-black w-6 h-6 rounded-full flex items-center justify-center border-2 border-white shadow-xl">${pCount}</span>` : ''}
                     </div>
                     <span class="mt-3 text-[11px] font-black px-3 py-1 bg-white border border-slate-100 rounded-full shadow-md text-slate-700 italic tracking-tight">${p.nickname}</span>
                 `;
-                node.onclick = () => { selectedMemberId = p.id; document.getElementById('side-panel').classList.remove('translate-x-full'); updateUI(); };
+                node.onclick = (e) => { e.stopPropagation(); selectedMemberId = p.id; document.getElementById('side-panel').classList.remove('translate-x-full'); updateUI(); };
                 container.appendChild(node);
             });
             renderArrows();
@@ -560,56 +491,75 @@
         function renderSummary() {
             const container = document.getElementById('summary-container'); container.innerHTML = '';
             const sorted = Object.values(allProfiles).filter(p => p && p.nickname).sort((a,b) => a.nickname.localeCompare(b.nickname));
-            if (sorted.length === 0) { container.innerHTML = '<div class="col-span-full text-center py-40 text-slate-300 font-black italic uppercase tracking-tighter">No Active Collaborators</div>'; return; }
-
+            if (sorted.length === 0) { container.innerHTML = '<div class="col-span-full text-center py-40 text-slate-300 font-black italic">Waiting for members...</div>'; return; }
             sorted.forEach(p => {
                 const received = allRequests.filter(r => r.toId === p.id).sort((a,b) => b.createdAt - a.createdAt);
                 const card = document.createElement('div');
-                card.className = "bg-white rounded-[2rem] border border-slate-100 shadow-xl overflow-hidden flex flex-col transition-all hover:scale-[1.02]";
+                card.className = "bg-white rounded-[2rem] border border-slate-100 shadow-xl overflow-hidden flex flex-col";
                 const rows = received.map(req => {
-                    const from = allProfiles[req.fromId]?.nickname || "탈퇴회원";
-                    const statusClass = req.status === 'completed' ? 'bg-green-50 text-green-600' : req.status === 'acknowledged' ? 'bg-blue-50 text-blue-600' : 'bg-orange-50 text-orange-600';
-                    return `<div class="p-4 border-b border-slate-50 flex items-start justify-between text-[11px] font-medium">
-                        <div class="flex-1 pr-3"><span class="font-black text-indigo-500 mr-1 italic">${from}:</span> <span class="text-slate-600">${req.content}</span></div>
-                        <div class="text-right whitespace-nowrap"><span class="px-2.5 py-1 rounded-lg font-black uppercase text-[9px] ${statusClass}">${req.status}</span></div>
-                    </div>`;
-                }).join('') || '<div class="p-12 text-center text-slate-300 italic text-xs font-bold uppercase tracking-widest">Clear Log</div>';
-                
-                card.innerHTML = `<div class="p-5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between">
-                    <div class="flex items-center space-x-3">
-                        <img src="${p.avatar}" class="w-10 h-10 rounded-full border-2 border-white shadow-md">
-                        <h3 class="font-black text-slate-800 italic uppercase tracking-tight">${p.nickname}</h3>
-                    </div>
-                    <span class="text-[10px] font-black text-indigo-400 bg-white px-3 py-1 rounded-full border border-indigo-100">${received.length}건</span>
-                </div><div class="flex-1 max-h-96 overflow-y-auto">${rows}</div>`;
+                    const statusClass = req.status === 'completed' ? 'bg-green-50 text-green-600' : 'bg-orange-50 text-orange-600';
+                    return `<div class="p-4 border-b border-slate-50 flex items-start justify-between text-[11px] font-medium italic"><div class="flex-1 pr-3"><span class="font-black text-indigo-500 mr-1">${allProfiles[req.fromId]?.nickname || "탈퇴"}:</span> <span>${req.content}</span></div><span class="px-2 py-0.5 rounded font-black uppercase text-[9px] ${statusClass}">${req.status}</span></div>`;
+                }).join('') || '<div class="p-12 text-center text-slate-300 italic text-xs font-bold">Log Empty</div>';
+                card.innerHTML = `<div class="p-5 bg-slate-50/50 border-b border-slate-100 flex items-center justify-between"><div class="flex items-center space-x-3"><img src="${p.avatar}" class="w-10 h-10 rounded-full border-2 border-white shadow-md"><h3 class="font-black text-slate-800 italic">${p.nickname}</h3></div><span class="text-[10px] font-black text-indigo-400 bg-white px-3 py-1 rounded-full border border-indigo-100 italic">${received.length}건</span></div><div class="flex-1 max-h-80 overflow-y-auto">${rows}</div>`;
                 container.appendChild(card);
             });
         }
 
+        // Helper to perform safe actions on dynamic elements (CSP Compliant)
         function renderPanel(uid) {
             const p = allProfiles[uid]; if(!p) return;
             const isMe = uid === auth.currentUser?.uid;
             document.getElementById('panel-title').textContent = p.nickname;
             document.getElementById('panel-user-img').src = p.avatar;
             document.getElementById('panel-me-tag').style.display = isMe ? 'block' : 'none';
-            const received = allRequests.filter(r => r.toId === uid).sort((a,b) => b.createdAt - a.createdAt);
             document.getElementById('section-request').style.display = isMe ? 'none' : 'block';
-            requestList.innerHTML = '';
+            
+            const list = document.getElementById('request-list');
+            list.innerHTML = '';
+            const received = allRequests.filter(r => r.toId === uid).sort((a,b) => b.createdAt - a.createdAt);
+            
             received.forEach(req => {
                 const card = document.createElement('div');
-                const fromNick = allProfiles[req.fromId]?.nickname || "Unknown";
                 card.className = `p-5 rounded-3xl border-2 transition-all shadow-sm bg-white ${req.status==='pending'?'border-orange-100':req.status==='acknowledged'?'border-blue-100':'border-green-100 opacity-80'}`;
-                card.innerHTML = `<div class="flex items-center justify-between mb-3"><span class="text-xs font-black text-slate-700 italic uppercase tracking-tight">${fromNick}</span><span class="text-[9px] font-black uppercase text-slate-400">${req.status}</span></div><p class="text-xs text-slate-600 font-medium leading-relaxed mb-4">${req.content}</p>
-                    ${req.reqImage ? `<img src="${req.reqImage}" class="w-full h-36 object-cover rounded-2xl mb-4 cursor-zoom-in border border-slate-50" onclick="window.open('${req.reqImage}')">` : ''}
-                    ${req.status==='pending'&&isMe?`<button onclick="acceptReq('${req.id}')" class="w-full py-3 bg-indigo-600 text-white text-xs font-black rounded-2xl shadow-lg active:scale-95 transition-all">요청 접수하기</button>`:''}
-                    ${req.status==='acknowledged'&&isMe?`<button onclick="completeReq('${req.id}')" class="w-full py-3 bg-green-600 text-white text-xs font-black rounded-2xl shadow-lg active:scale-95 transition-all">업무 완료 보고</button>`:''}`;
-                requestList.appendChild(card);
-            });
-            if(received.length === 0) requestList.innerHTML = '<div class="text-center py-20 text-slate-300 text-xs font-black italic uppercase tracking-widest opacity-50">Empty Request Stream</div>';
-        }
+                
+                const header = document.createElement('div');
+                header.className = 'flex items-center justify-between mb-3';
+                header.innerHTML = `<span class="text-xs font-black text-slate-700 italic uppercase">${allProfiles[req.fromId]?.nickname || "Unknown"}</span><span class="text-[9px] font-black uppercase text-slate-400">${req.status}</span>`;
+                card.appendChild(header);
 
-        window.acceptReq = async (id) => await update(ref(rtdb, `artifacts/${appId}/public/data/requests/${id}`), { status: 'acknowledged' });
-        window.completeReq = async (id) => await update(ref(rtdb, `artifacts/${appId}/public/data/requests/${id}`), { status: 'completed', completedAt: Date.now() });
+                const content = document.createElement('p');
+                content.className = 'text-xs text-slate-600 font-medium leading-relaxed mb-4';
+                content.textContent = req.content;
+                card.appendChild(content);
+
+                if (req.reqImage) {
+                    const img = document.createElement('img');
+                    img.src = req.reqImage;
+                    img.className = 'w-full h-36 object-cover rounded-2xl mb-4 cursor-pointer border border-slate-50';
+                    img.addEventListener('click', () => window.open(req.reqImage));
+                    card.appendChild(img);
+                }
+
+                if (isMe) {
+                    if (req.status === 'pending') {
+                        const btn = document.createElement('button');
+                        btn.className = 'w-full py-3 bg-indigo-600 text-white text-xs font-black rounded-2xl shadow-lg active:scale-95 transition-all uppercase';
+                        btn.textContent = 'Accept Request';
+                        btn.addEventListener('click', () => update(ref(rtdb, `artifacts/${appId}/public/data/requests/${req.id}`), { status: 'acknowledged' }));
+                        card.appendChild(btn);
+                    } else if (req.status === 'acknowledged') {
+                        const btn = document.createElement('button');
+                        btn.className = 'w-full py-3 bg-green-600 text-white text-xs font-black rounded-2xl shadow-lg active:scale-95 transition-all uppercase';
+                        btn.textContent = 'Report Complete';
+                        btn.addEventListener('click', () => update(ref(rtdb, `artifacts/${appId}/public/data/requests/${req.id}`), { status: 'completed', completedAt: Date.now() }));
+                        card.appendChild(btn);
+                    }
+                }
+                list.appendChild(card);
+            });
+            if(received.length === 0) list.innerHTML = '<div class="text-center py-20 text-slate-300 text-xs font-black italic uppercase tracking-widest opacity-50">Empty Stream</div>';
+            lucide.createIcons();
+        }
 
         init();
     </script>
