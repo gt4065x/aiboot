@@ -242,7 +242,10 @@
         const googleProvider = new GoogleAuthProvider();
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'project-collab-v3';
 
-        const geminiApiKey = "";
+        
+        // SVG layer for relationship arrows
+        const svg = document.getElementById('network-svg');
+const geminiApiKey = "";
         const callGemini = async (prompt, sys) => {
             const resp = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${geminiApiKey}`, {
                 method: 'POST', headers: { 'Content-Type': 'application/json' },
@@ -426,7 +429,7 @@
         function renderDiagram() {
             const container = document.getElementById('members-layer');
             container.innerHTML = '';
-            const rect = document.getElementById('diagram-container').getBoundingClientRect();
+            const rect = container.getBoundingClientRect();
             if (rect.width === 0) return;
             const cx = rect.width / 2, cy = rect.height / 2, radius = Math.min(rect.width, rect.height) * 0.32;
             const profiles = Object.values(allProfiles);
